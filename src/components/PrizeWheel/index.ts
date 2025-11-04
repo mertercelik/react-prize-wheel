@@ -1,0 +1,1 @@
+export { PrizeWheel } from './PrizeWheel';

@@ -1,0 +1,15 @@
+export const WHEEL_CONSTANTS = {
+  INDICATOR_ANGLE: -31,
+  FIRST_SECTOR_START: -90,
+  SAFE_ZONE: 2,
+  INDICATOR_PROGRESS_THRESHOLD: 0.15,
+} as const;
+
+export const ANIMATION_CONFIG = {
+  INDICATOR_ROTATION_DOWN: -10,
+  INDICATOR_TRANSFORM_ORIGIN: '65% 36%',
+} as const;
+
+export const getIndicatorOffset = (): number => {
+  return WHEEL_CONSTANTS.INDICATOR_ANGLE - WHEEL_CONSTANTS.FIRST_SECTOR_START;
+};
