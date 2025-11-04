@@ -1,0 +1,20 @@
+.prize-wheel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.prize-wheel-svg {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+.wheel {
+  transform-origin: center;
+}
+
+.active {
+  transform-origin: 65% 36%;
+}
