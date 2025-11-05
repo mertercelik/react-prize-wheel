@@ -1,6 +1,6 @@
 {
   "name": "@mertercelik/react-prize-wheel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A customizable and animated prize wheel component for React",
   "type": "module",
   "main": "./dist/index.cjs",
