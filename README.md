@@ -9,23 +9,24 @@ A highly customizable, animated prize wheel component for React applications wit
 ## Installation
 
 ```bash
-npm install react-prize-wheel
+npm install @mertercelik/react-prize-wheel
 ```
 
 ```bash
-yarn add react-prize-wheel
+yarn add @mertercelik/react-prize-wheel
 ```
 
 ```bash
-pnpm add react-prize-wheel
+pnpm add @mertercelik/react-prize-wheel
 ```
 
 ## Quick Start
 
 ```tsx
 import { useRef } from 'react';
-import { PrizeWheel } from 'react-prize-wheel';
-import type { Sector, PrizeWheelRef } from 'react-prize-wheel';
+import { PrizeWheel } from '@mertercelik/react-prize-wheel';
+import type { Sector, PrizeWheelRef } from '@mertercelik/react-prize-wheel';
+import '@mertercelik/react-prize-wheel/style.css';
 
 function App() {
   const wheelRef = useRef<PrizeWheelRef>(null);
@@ -145,8 +146,9 @@ interface PrizeWheelRef {
 
 ```tsx
 import { useRef, useState } from 'react';
-import { PrizeWheel } from 'react-prize-wheel';
-import type { Sector, PrizeWheelRef } from 'react-prize-wheel';
+import { PrizeWheel } from '@mertercelik/react-prize-wheel';
+import type { Sector, PrizeWheelRef } from '@mertercelik/react-prize-wheel';
+import '@mertercelik/react-prize-wheel/style.css';
 
 function App() {
   const wheelRef = useRef<PrizeWheelRef>(null);
@@ -236,7 +238,7 @@ import type {
   Sector, 
   PrizeWheelProps, 
   PrizeWheelRef 
-} from 'react-prize-wheel';
+} from '@mertercelik/react-prize-wheel';
 ```
 
 ## Browser Support
