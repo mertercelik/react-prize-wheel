@@ -21,6 +21,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:demo": "vite build --mode demo",
+    "build:all": "npm run build && npm run build:demo",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "preview:demo": "vite preview --outDir docs --base /react-prize-wheel/",
