@@ -69,6 +69,7 @@ export const PrizeWheel = forwardRef<PrizeWheelRef, PrizeWheelProps>((props, ref
     <div className="prize-wheel-container">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 730 730" className="prize-wheel-svg">
         <g ref={wheelRef} className="wheel">
+          <circle cx="365" cy="365" r="360" fill="none" opacity="0" pointerEvents="none" />
           <circle className="frame" cx="365" cy="365" r="347.6" fill={frameColor} />
           <g className="sticks">{generateSticks(sectors.length, sticksColor)}</g>
           <g className="sectors">{generateSectorPaths(sectors, wheelColors, borderColor, borderWidth, textFontSize, textColor)}</g>
