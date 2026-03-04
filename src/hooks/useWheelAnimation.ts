@@ -14,6 +14,25 @@ interface UseWheelAnimationProps {
   onSpinEnd?: (sector: Sector) => void;
 }
 
+const resolveWinningSectorIndex = (
+  sectors: Sector[],
+  winningSectorId?: number | string,
+): number => {
+  if (winningSectorId == null) {
+    return selectWinningSector(sectors);
+  }
+
+  const index = sectors.findIndex((s) => s.id === winningSectorId);
+  if (index === -1) {
+    console.warn(
+      `[PrizeWheel] Sector with id "${winningSectorId}" not found. Falling back to probability-based selection.`,
+    );
+    return selectWinningSector(sectors);
+  }
+
+  return index;
+};
+
 export const useWheelAnimation = ({
   sectors,
   duration,
@@ -40,13 +59,15 @@ export const useWheelAnimation = ({
     };
   }, []);
 
-  const spin = () => {
+  const spin = (winningSectorId?: number | string) => {
     if (!wheelRef.current || !indicatorTimeline.current) return false;
+
+    spinTimeline.current?.kill();
 
     lastRotation.current = 0;
     lastTriggeredSector.current = -1;
 
-    const winningSectorIndex = selectWinningSector(sectors);
+    const winningSectorIndex = resolveWinningSectorIndex(sectors, winningSectorId);
     const calculation = calculateWheelRotation(
       winningSectorIndex,
       sectors.length,
@@ -55,14 +76,9 @@ export const useWheelAnimation = ({
       maxSpins
     );
 
-    spinTimeline.current = gsap.timeline({
-      onComplete: () => {
-        currentRotation.current = calculation.totalRotation;
-        onSpinEnd?.(sectors[winningSectorIndex]);
-      },
-    });
-
     gsap.set(wheelRef.current, { force3D: true, willChange: 'transform' });
+
+    spinTimeline.current = gsap.timeline();
 
     spinTimeline.current.to(wheelRef.current, {
       rotation: calculation.totalRotation,
@@ -89,7 +105,9 @@ export const useWheelAnimation = ({
         lastRotation.current = Math.round(rotation);
       },
       onComplete: () => {
-        gsap.set(wheelRef.current, { willChange: 'auto' });
+        gsap.set(wheelRef.current!, { willChange: 'auto' });
+        currentRotation.current = calculation.totalRotation;
+        onSpinEnd?.(sectors[winningSectorIndex]);
       },
     });
 

@@ -6,7 +6,7 @@ export interface Sector {
 }
 
 export interface PrizeWheelRef {
-  spin: () => void;
+  spin: (winningSectorId?: number | string) => void;
   isSpinning: boolean;
 }
 
