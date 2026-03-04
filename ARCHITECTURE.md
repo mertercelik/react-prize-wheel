@@ -21,7 +21,7 @@ react-prize-wheel/
 │   │   ├── algorithms/
 │   │   │   ├── probabilitySelector.ts  # Winning sector selection
 │   │   │   ├── wheelAlgorithm.ts       # Rotation calculations
-│   │   │   └── indicatorAlgorithm.ts   # Indicator animations
+│   │   │   └── indicatorAlgorithm.ts   # Indicator trigger logic
 │   │   ├── animations/
 │   │   │   └── index.ts                # GSAP animation setup
 │   │   └── config/
@@ -72,10 +72,10 @@ The PrizeWheel component follows a modular architecture with clear separation of
 The component uses GSAP for smooth, performant animations:
 
 ```
-User Click → Probability Selection → Rotation Calculation → GSAP Animation → Callback
+User Click → Winner Resolution → Rotation Calculation → GSAP Animation → Callback
 ```
 
-1. **Probability Selection**: Weighted random selection based on sector probabilities
+1. **Winner Resolution**: Either backend-determined (via `winningSectorId`) or client-side weighted random selection
 2. **Rotation Calculation**: Determines final rotation angle to land on selected sector
 3. **Animation**: GSAP handles smooth easing and rotation
 4. **Indicator Animation**: Synchronized bounce effect during spin
@@ -85,28 +85,34 @@ User Click → Probability Selection → Rotation Calculation → GSAP Animation
 The component maintains minimal internal state:
 
 - `isSpinning`: Boolean flag for spin status
-- Animation refs: GSAP timeline references
+- Animation refs: GSAP timeline references (killed on new spin and unmount)
 - Wheel ref: DOM reference for rotation
 
 External state is managed through:
 - Props: Configuration and callbacks
-- Ref API: Programmatic control
+- Ref API: Programmatic control (`spin(winningSectorId?)`, `isSpinning`)
 
 ### Probability Algorithm
 
-The probability system uses weighted random selection:
+The probability system uses weighted random selection with safeguards:
 
 ```typescript
-totalWeight = sum(sector.probability)
+totalWeight = sum(sector.probability ?? 1)
+
+if totalWeight <= 0:
+  return uniformRandom(sectors)
+
 random = Math.random() * totalWeight
 
 for each sector:
-  random -= sector.probability
+  random -= sector.probability ?? 1
   if random <= 0:
     return sector
 ```
 
-This ensures fair distribution based on relative weights.
+- Sectors without an explicit probability default to `1`
+- If all probabilities are zero, falls back to uniform random selection
+- Supports `probability: 0` to exclude a sector from selection
 
 ### Rotation Calculation
 
@@ -123,9 +129,11 @@ finalRotation = (randomSpins * 360) + sectorAngle + offset
 ```
 Props → Component → SVG Generation → Render
   ↓
-User Action → Ref API → Animation Hook → GSAP
+User Action → Ref API (spin) → Winner Resolution → Animation Hook → GSAP
+  ↓                               ↑
+Animation Complete → Callback    Backend API (optional)
   ↓
-Animation Complete → Callback → External State
+External State
 ```
 
 ## Build System
@@ -191,16 +199,16 @@ The component targets modern browsers with:
 
 ## Security Considerations
 
-1. **Input Validation**: Sector count limits (2-24)
+1. **Input Validation**: Sector count (2-24), minSpins/maxSpins order, positive duration
 2. **Type Safety**: TypeScript prevents runtime errors
-3. **No External Data**: All logic is client-side
+3. **Backend-Determined Results**: Supports server-side winner selection via `spin(winningSectorId)` to prevent client-side manipulation
 4. **No Eval**: No dynamic code execution
 
 ## Future Enhancements
 
 Potential areas for expansion:
 
-1. **Accessibility**: ARIA labels and keyboard navigation
+1. **Accessibility**: Keyboard navigation (ARIA labels already implemented)
 2. **Themes**: Predefined color schemes
 3. **Sound Effects**: Audio feedback for spins
 4. **Mobile**: Touch gesture support

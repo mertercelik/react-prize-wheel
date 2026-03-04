@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-03-04
+
+### Added
+
+- Backend-determined winner support via `spin(winningSectorId)` parameter
+- Input validation for `minSpins > maxSpins` configuration
+- Input validation for `duration <= 0`
+- Zero-probability safeguard with uniform random fallback
+- SVG accessibility attributes (`role="img"`, `aria-label`)
+
+### Fixed
+
+- Fixed `probability: 0` being treated as `probability: 1` due to `||` operator (replaced with `??`)
+- Fixed fallback return in probability selector always favoring first sector
+- Fixed potential animation conflict when spin is triggered during an active spin (previous timeline is now killed)
+- Consolidated duplicate `onComplete` callbacks (timeline-level and tween-level) into a single handler
+
 ## [1.0.2] - 2024-11-27
 
 ### Fixed

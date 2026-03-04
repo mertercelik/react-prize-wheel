@@ -19,6 +19,6 @@
     "declarationDir": "./dist",
     "emitDeclarationOnly": true
   },
-  "include": ["src"],
+  "include": ["src", "demo"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
 }

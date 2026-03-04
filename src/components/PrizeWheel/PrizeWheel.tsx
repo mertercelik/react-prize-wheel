@@ -40,6 +40,14 @@ export const PrizeWheel = forwardRef<PrizeWheelRef, PrizeWheelProps>((props, ref
     throw new Error('Sector count must be between 2 and 24');
   }
 
+  if (minSpins > maxSpins) {
+    throw new Error('minSpins cannot be greater than maxSpins');
+  }
+
+  if (duration <= 0) {
+    throw new Error('duration must be greater than 0');
+  }
+
   const [isSpinning, setIsSpinning] = useState(false);
   
   const { wheelRef, activeRef, spin: performSpin } = useWheelAnimation({
@@ -53,11 +61,11 @@ export const PrizeWheel = forwardRef<PrizeWheelRef, PrizeWheelProps>((props, ref
     },
   });
 
-  const handleSpin = () => {
+  const handleSpin = (winningSectorId?: number | string) => {
     if (isSpinning) return;
     setIsSpinning(true);
     onSpinStart?.();
-    performSpin();
+    performSpin(winningSectorId);
   };
 
   useImperativeHandle(ref, () => ({
@@ -67,7 +75,7 @@ export const PrizeWheel = forwardRef<PrizeWheelRef, PrizeWheelProps>((props, ref
 
   return (
     <div className="prize-wheel-container">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 730 730" className="prize-wheel-svg">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 730 730" className="prize-wheel-svg" role="img" aria-label="Prize wheel">
         <g ref={wheelRef} className="wheel">
           <circle cx="365" cy="365" r="360" fill="none" opacity="0" pointerEvents="none" />
           <circle className="frame" cx="365" cy="365" r="347.6" fill={frameColor} />
